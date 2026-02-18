@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { NavLink, Route, Routes } from "react-router-dom";
+import Auth from "./pages/Auth";
+import Today from "./pages/Today";
+import RequireAuth from "./lib/RequireAuth";
+import { supabase } from "./lib/supabase";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="container">
+      <header className="topbar">
+        <div>
+          <p className="eyebrow">One Growth</p>
+          <h1 className="title">Growth Diary</h1>
+        </div>
 
-export default App
+        <nav style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <NavLink className="link" to="/">Today</NavLink>
+          <NavLink className="link" to="/history">History</NavLink>
+          <button className="link" onClick={() => supabase.auth.signOut()} type="button">
+            Sign out
+          </button>
+        </nav>
+      </header>
+
+      <Routes>
+        <Route path="/auth" element={<Auth />} />
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <Today />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <RequireAuth>
+              <div className="card">
+                <h2 className="h2">History</h2>
+                <p className="muted">Next.</p>
+              </div>
+            </RequireAuth>
+          }
+        />
+      </Routes>
+    </div>
+  );
+}
