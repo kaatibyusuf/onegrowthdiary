@@ -280,3 +280,46 @@ textarea:focus{
   .card{ padding: 14px; }
   .topbar{ align-items:flex-start; }
 }
+/* Drawer */
+.backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display:flex;
+  justify-content:flex-end;
+  z-index: 50;
+}
+
+.drawer{
+  width: min(360px, 92vw);
+  height: 100%;
+  padding: 14px;
+  background: linear-gradient(180deg, rgba(28,49,44,.92), rgba(12,24,22,.92));
+  border-left: 1px solid rgba(246,205,69,.16);
+  box-shadow: -18px 0 60px rgba(0,0,0,.45);
+}
+
+.drawerHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 6px 4px 10px;
+  border-bottom: 1px solid rgba(246,205,69,.10);
+}
+
+.drawerLinks{
+  display:grid;
+  gap: 10px;
+  padding: 12px 2px;
+}
+
+.menuBtn{
+  border:1px solid rgba(246,205,69,.22);
+  background: rgba(19,38,34,.55);
+  color: rgba(246,205,69,.95);
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  cursor:pointer;
+}

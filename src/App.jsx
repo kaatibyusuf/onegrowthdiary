@@ -1,13 +1,20 @@
+import { useState } from "react";
 import logo from "./assets/onegrowth-logo.png";
-import { NavLink, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Today from "./pages/Today";
+import Calendar from "./pages/Calendar";
+import Profile from "./pages/Profile";
+import Reminders from "./pages/Reminders";
+import Settings from "./pages/Settings";
 import RequireAuth from "./lib/RequireAuth";
 import { supabase } from "./lib/supabase";
 import { useAuth } from "./lib/AuthProvider";
+import MenuDrawer from "./components/MenuDrawer";
 
 export default function App() {
   const { user, loading } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="container">
@@ -16,12 +23,7 @@ export default function App() {
           <img
             src={logo}
             alt="One Growth"
-            style={{
-              height: 38,
-              width: "auto",
-              filter: "drop-shadow(0 6px 18px rgba(0,0,0,.35))",
-              display: "block",
-            }}
+            style={{ height: 38, width: "auto", display: "block" }}
           />
           <div>
             <p className="eyebrow">One Growth</p>
@@ -29,52 +31,32 @@ export default function App() {
           </div>
         </div>
 
-        <nav style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          {loading ? null : user ? (
-            <>
-              <NavLink className="link" to="/">
-                Today
-              </NavLink>
-              <NavLink className="link" to="/history">
-                History
-              </NavLink>
-              <button
-                className="link"
-                onClick={() => supabase.auth.signOut()}
-                type="button"
-              >
-                Sign out
-              </button>
-            </>
-          ) : (
-            <NavLink className="link" to="/auth">
-              Login
-            </NavLink>
-          )}
-        </nav>
+        <button
+          className="menuBtn"
+          type="button"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
+          title="Menu"
+        >
+          ☰
+        </button>
       </header>
+
+      <MenuDrawer
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        userEmail={user?.email}
+        onSignOut={() => supabase.auth.signOut()}
+      />
 
       <Routes>
         <Route path="/auth" element={<Auth />} />
-        <Route
-          path="/"
-          element={
-            <RequireAuth>
-              <Today />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/history"
-          element={
-            <RequireAuth>
-              <div className="card">
-                <h2 className="h2">History</h2>
-                <p className="muted">Next.</p>
-              </div>
-            </RequireAuth>
-          }
-        />
+
+        <Route path="/" element={<RequireAuth><Today /></RequireAuth>} />
+        <Route path="/calendar" element={<RequireAuth><Calendar /></RequireAuth>} />
+        <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
+        <Route path="/reminders" element={<RequireAuth><Reminders /></RequireAuth>} />
+        <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
       </Routes>
     </div>
   );
